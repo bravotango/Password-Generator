@@ -31,19 +31,29 @@ function writePassword() {
 
 // WHEN the password is generated
 // THEN the password is either displayed in an alert or written to the page
+let passwordLength;
+let includeLowercaseCharacters,
+  includeUppercaseCharacters,
+  includeNumericCharacters,
+  includeSpecialCharacters;
+
+includeLowercaseCharacters =
+  includeUppercaseCharacters =
+  includeNumericCharacters =
+  includeSpecialCharacters =
+    false;
 
 const generatePassword = () => {
-  let passwordLength = getPasswordLength();
-  let includeLowercase = isLowercaseCharacters();
-  let includeUppercase = isUppercaseCharacters();
-  let includeNumeric = isNumericCharacters();
-  let includeSpecial = isSpecialCharacters();
-  console.log(`valid password length = ${passwordLength}`);
-  console.log(`include lowercase: ${includeLowercase}`);
-  console.log(`include uppercase: ${includeUppercase}`);
-  console.log(`include numeric ${includeNumeric}`);
-  console.log(`include special characters ${includeSpecial}`);
+  passwordLength = getPasswordLength();
 
+  let isCharacterTypesValid = setCharacterTypes();
+
+  console.log(`valid password length = ${passwordLength}`);
+  console.log(`include lowercase: ${includeLowercaseCharacters}`);
+  console.log(`include uppercase: ${includeUppercaseCharacters}`);
+  console.log(`include numeric ${includeNumericCharacters}`);
+  console.log(`include special characters ${includeSpecialCharacters}`);
+  console.log(`characters are valid: ${isCharacterTypesValid}`);
   return "fakeP@$$worD";
 };
 
@@ -66,21 +76,26 @@ const getPasswordLength = () => {
   return passwordLength;
 };
 
-// TODO: possible refactor
-const isLowercaseCharacters = () => {
-  return confirm("Include lowercase characters?");
+const setCharacterTypes = () => {
+  includeLowercaseCharacters = confirmation("Include lowercase characters?");
+  includeUppercaseCharacters = confirmation("Include uppercase characters?");
+  includeNumericCharacters = confirmation("Include numeric characters?");
+  includeSpecialCharacters = confirmation("Include special characters?");
+
+  if (
+    !includeLowercaseCharacters &&
+    !includeUppercaseCharacters &&
+    !includeNumericCharacters &&
+    !includeSpecialCharacters
+  ) {
+    alert("You must accept at least 1 character type.  Please try again.");
+    setCharacterTypes();
+  }
+  return true;
 };
 
-const isUppercaseCharacters = () => {
-  return confirm("Include uppercase characters?");
-};
-
-const isNumericCharacters = () => {
-  return confirm("Include numeric characters?");
-};
-
-const isSpecialCharacters = () => {
-  return confirm("Include special characters?");
+const confirmation = (message) => {
+  return confirm(message);
 };
 
 // Add event listener to generate button
