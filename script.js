@@ -31,6 +31,7 @@ function writePassword() {
 
 // WHEN the password is generated
 // THEN the password is either displayed in an alert or written to the page
+let password = [];
 let passwordLength;
 let includeLowercaseCharacters,
   includeUppercaseCharacters,
@@ -54,7 +55,43 @@ const generatePassword = () => {
   console.log(`include numeric ${includeNumericCharacters}`);
   console.log(`include special characters ${includeSpecialCharacters}`);
   console.log(`characters are valid: ${isCharacterTypesValid}`);
-  return "fakeP@$$worD";
+
+  const generateLowercaseCharacter = () => {
+    return "a";
+  };
+  const generateUppercaseCharacter = () => {
+    return "A";
+  };
+  const generateNumericCharacter = () => {
+    return 1;
+  };
+  const generateSpecialCharacter = () => {
+    return "%";
+  };
+
+  let characterTypes = [];
+  if (includeLowercaseCharacters) {
+    characterTypes.push(generateLowercaseCharacter);
+  }
+  if (includeUppercaseCharacters) {
+    characterTypes.push(generateUppercaseCharacter);
+  }
+  if (includeNumericCharacters) {
+    characterTypes.push(generateNumericCharacter);
+  }
+  if (includeSpecialCharacters) {
+    characterTypes.push(generateSpecialCharacter);
+  }
+
+  for (let i = 0; i < passwordLength; i++) {
+    let randomCharacterTypeIndex = Math.floor(
+      Math.random() * characterTypes.length
+    );
+    password[i] = characterTypes[randomCharacterTypeIndex]();
+  }
+  console.log(`password ${password.length}`);
+
+  return password.join("");
 };
 
 const getPasswordLength = () => {
@@ -77,10 +114,10 @@ const getPasswordLength = () => {
 };
 
 const setCharacterTypes = () => {
-  includeLowercaseCharacters = confirmation("Include lowercase characters?");
-  includeUppercaseCharacters = confirmation("Include uppercase characters?");
-  includeNumericCharacters = confirmation("Include numeric characters?");
-  includeSpecialCharacters = confirmation("Include special characters?");
+  includeLowercaseCharacters = confirmation(1, "lowercase");
+  includeUppercaseCharacters = confirmation(2, "uppercase");
+  includeNumericCharacters = confirmation(3, "numeric");
+  includeSpecialCharacters = confirmation(4, "special");
 
   if (
     !includeLowercaseCharacters &&
@@ -94,8 +131,11 @@ const setCharacterTypes = () => {
   return true;
 };
 
-const confirmation = (message) => {
-  return confirm(message);
+const confirmation = (number, type) => {
+  var newLine = "\r\n";
+  return confirm(
+    `Character type question ${number} of 4:${newLine}${newLine}Include ${type} characters?`
+  );
 };
 
 // Add event listener to generate button
