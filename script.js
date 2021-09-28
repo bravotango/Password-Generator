@@ -3,8 +3,12 @@ var generateBtn = document.querySelector("#generate");
 
 // Write password to the #password input
 function writePassword() {
-  var password = generatePassword();
-  var passwordText = document.querySelector("#password");
+  var passwordText = document.getElementById("password");
+  //passwordText.value = Array(128).fill("-").join("");
+  //console.log(passwordText.value);
+  var password = [];
+  passwordText.value = password;
+  password = generatePassword();
 
   passwordText.value = password;
 }
@@ -49,24 +53,22 @@ const generatePassword = () => {
 
   let isCharacterTypesValid = setCharacterTypes();
 
-  console.log(`valid password length = ${passwordLength}`);
-  console.log(`include lowercase: ${includeLowercaseCharacters}`);
-  console.log(`include uppercase: ${includeUppercaseCharacters}`);
-  console.log(`include numeric ${includeNumericCharacters}`);
-  console.log(`include special characters ${includeSpecialCharacters}`);
-  console.log(`characters are valid: ${isCharacterTypesValid}`);
-
   const generateLowercaseCharacter = () => {
-    return "a";
+    return pickRandomCharacter("abcdefghijklmnopqrstuvwxyz");
   };
   const generateUppercaseCharacter = () => {
-    return "A";
+    return pickRandomCharacter("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
   };
   const generateNumericCharacter = () => {
-    return 1;
+    return pickRandomCharacter("0123456789");
   };
   const generateSpecialCharacter = () => {
-    return "%";
+    return pickRandomCharacter("!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~");
+  };
+
+  const pickRandomCharacter = (characterArray) => {
+    // pick a random character from the characterArray
+    return characterArray[Math.floor(Math.random() * characterArray.length)];
   };
 
   let characterTypes = [];
@@ -89,7 +91,6 @@ const generatePassword = () => {
     );
     password[i] = characterTypes[randomCharacterTypeIndex]();
   }
-  console.log(`password ${password.length}`);
 
   return password.join("");
 };
