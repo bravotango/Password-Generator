@@ -1,12 +1,24 @@
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
+let password = [];
+let passwordLength;
+let includeLowercaseCharacters,
+  includeUppercaseCharacters,
+  includeNumericCharacters,
+  includeSpecialCharacters;
+
+includeLowercaseCharacters =
+  includeUppercaseCharacters =
+  includeNumericCharacters =
+  includeSpecialCharacters =
+    false;
 
 // Write password to the #password input
 function writePassword() {
   var passwordText = document.getElementById("password");
   //passwordText.value = Array(128).fill("-").join("");
   //console.log(passwordText.value);
-  var password = [];
+  password = [];
   passwordText.value = password;
   password = generatePassword();
 
@@ -35,18 +47,6 @@ function writePassword() {
 
 // WHEN the password is generated
 // THEN the password is either displayed in an alert or written to the page
-let password = [];
-let passwordLength;
-let includeLowercaseCharacters,
-  includeUppercaseCharacters,
-  includeNumericCharacters,
-  includeSpecialCharacters;
-
-includeLowercaseCharacters =
-  includeUppercaseCharacters =
-  includeNumericCharacters =
-  includeSpecialCharacters =
-    false;
 
 const generatePassword = () => {
   passwordLength = getPasswordLength();
