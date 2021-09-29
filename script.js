@@ -32,16 +32,13 @@ function generatePassword() {
     return generatePassword();
   }
 
-  // characterTypes = setCharaterTypes();
-  if (characterTypes.length === 0) {
-    setCharacterTypes();
-    for (let i = 0; i < passwordLength; i++) {
-      let randomCharacterTypeIndex = Math.floor(
-        Math.random() * characterTypes.length
-      );
-      // randomly choose a characterType function to run from the characterTypes function array
-      password[i] = characterTypes[randomCharacterTypeIndex]();
-    }
+  setCharacterTypes();
+  for (let i = 0; i < passwordLength; i++) {
+    let randomCharacterTypeIndex = Math.floor(
+      Math.random() * characterTypes.length
+    );
+    // randomly choose a characterType function to run from the characterTypes function array
+    password[i] = characterTypes[randomCharacterTypeIndex]();
   }
 
   return password.join("");
@@ -53,6 +50,7 @@ function getPasswordLength() {
   );
   // check for validity: is a number, is a number between 8 & 128, no decimals
   if (
+    passwordLength === null ||
     isNaN(passwordLength) === true ||
     parseInt(passwordLength) < 8 ||
     parseInt(passwordLength) > 128 ||
@@ -61,7 +59,7 @@ function getPasswordLength() {
     alert(
       `'${passwordLength}' is not a valid character length between 8 and 128`
     );
-    getPasswordLength();
+    return getPasswordLength();
   }
   return passwordLength;
 }
@@ -80,7 +78,7 @@ function setCharacterTypes() {
     !includeSpecialCharacters
   ) {
     alert("You must accept at least 1 character type.  Please try again.");
-    setCharacterTypes();
+    return setCharacterTypes();
   }
 
   const generateLowercaseCharacter = () => {
