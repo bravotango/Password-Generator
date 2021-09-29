@@ -29,6 +29,115 @@
         </div>
       </div>
     </div>
+    <div id="modal">
+      <i id="modalCloseBtn">x</i>
+
+        <form
+          id="formPasswordLength"
+          name="formPasswordLength"
+          onsubmit="javascript:submitPasswordLength(this); return false"
+        >
+          <p>
+            <strong
+              >What password length (8-128 characters) do you require?</strong
+            >
+          </p>
+
+          <p class="error" id="passwordLengthError">
+            Invalid character length. Must be between 8 and 128
+          </p>
+          <input type="number" name="passwordLength" min="8" max="128" required />
+
+          <button type="submit">Submit</button>
+        </form>
+
+        <form
+        id="formCharacterTypes"
+        name="formCharacterTypes"
+        onsubmit="javascript:submitCharacterTypes(this); return false"
+        >
+          <p>
+            <strong>What character types do you want to include?</strong>
+          </p>
+
+          <p class="error" id="typeError">
+            Invalid type selection. You must choose at least 1 type
+          </p>
+          <fieldset id="IncludeLowercase">
+            <legend>Include lowercase characters?</legend>
+            <input
+              type="radio"
+              id="lowercaseYes"
+              name="lowercase"
+              value=1
+              required
+            /><label for="lowercaseYes">Yes</label>
+            <input
+              type="radio"
+              id="lowercaseNo"
+              name="lowercase"
+              value=0
+              required
+            /><label for="lowercaseNo">No</label>
+          </fieldset>
+
+          <fieldset id="IncludeUppercase">
+            <legend>Include uppercase characters?</legend>
+            <input
+              type="radio"
+              id="uppercaseYes"
+              name="uppercase"
+              value=1
+              required
+            /><label for="uppercaseYes">Yes</label>
+            <input
+              type="radio"
+              id="uppercaseNo"
+              name="uppercase"
+              value=0
+              required
+            /><label for="uppercaseNo">No</label>
+          </fieldset>
+          <fieldset id="IncludeNumeric">
+            <legend>Include numeric characters?</legend>
+            <input
+              type="radio"
+              id="numericYes"
+              name="numeric"
+              value=1
+              required
+            /><label for="numericYes">Yes</label>
+            <input
+              type="radio"
+              id="numericNo"
+              name="numeric"
+              value=0
+              required
+            /><label for="numericNo">No</label>
+          </fieldset>
+          <fieldset id="IncludeSpecial">
+            <legend>Include special characters?</legend>
+            <input
+              type="radio"
+              id="specialYes"
+              name="special"
+              value=1
+              required
+            /><label for="specialYes">Yes</label>
+            <input
+              type="radio"
+              id="specialNo"
+              name="special"
+              value=0
+              required
+            /><label for="specialNo">No</label>
+          </fieldset>
+
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+    <div id="overlay"></div>
     <script src="script.js"></script>
   </body>
 </html>

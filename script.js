@@ -1,58 +1,49 @@
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
+var modal = document.getElementById("modal");
+var overlay = document.getElementById("overlay");
+var formPasswordLength = document.getElementById("formPasswordLength");
+var formCharacterTypes = document.getElementById("formCharacterTypes");
+var passwordText = document.getElementById("password");
+
 let password = [];
 let passwordLength;
-let includeLowercaseCharacters,
-  includeUppercaseCharacters,
-  includeNumericCharacters,
-  includeSpecialCharacters;
-
-includeLowercaseCharacters =
-  includeUppercaseCharacters =
-  includeNumericCharacters =
-  includeSpecialCharacters =
-    false;
+let includeLowercaseCharacters = 0;
+let includeUppercaseCharacters = 0;
+let includeNumericCharacters = 0;
+let includeSpecialCharacters = 0;
+let characterTypes = [];
 
 // Write password to the #password input
 function writePassword() {
-  var passwordText = document.getElementById("password");
-  //passwordText.value = Array(128).fill("-").join("");
-  //console.log(passwordText.value);
+  modal.style.display = "block";
+  overlay.style.display = "block";
+
+  // reset
   password = [];
+  characterTypes = [];
   passwordText.value = password;
+
   password = generatePassword();
 
+  console.log("password =", password);
   passwordText.value = password;
 }
-
-// GIVEN I need a new, secure password
-
-// WHEN I click the button to generate a password
-// THEN I am presented with a series of prompts for password criteria
-
-// WHEN prompted for password criteria
-// THEN I select which criteria to include in the password
-
-// WHEN prompted for the length of the password
-// THEN I choose a length of at least 8 characters and no more than 128 characters
-
-// WHEN asked for character types to include in the password
-// THEN I confirm whether or not to include lowercase, uppercase, numeric, and/or special characters
-
-// WHEN I answer each prompt
-// THEN my input should be validated and at least one character type should be selected
-
-// WHEN all prompts are answered
-// THEN a password is generated that matches the selected criteria
-
-// WHEN the password is generated
-// THEN the password is either displayed in an alert or written to the page
 
 const generatePassword = () => {
   passwordLength = getPasswordLength();
 
-  let isCharacterTypesValid = setCharacterTypes();
+  // [
+  //  includeLowercaseCharacters,
+  //  includeUppercaseCharacters,
+  //  includeNumericCharacters,
+  //  includeSpecialCharacters
+  // ] = setCharacterTypes();
+  password = createPassword();
+};
 
+const createPassword = () => {
+  console.log("entered create password");
   const generateLowercaseCharacter = () => {
     return pickRandomCharacter("abcdefghijklmnopqrstuvwxyz");
   };
@@ -71,21 +62,27 @@ const generatePassword = () => {
     return characterArray[Math.floor(Math.random() * characterArray.length)];
   };
 
-  let characterTypes = [];
-  if (includeLowercaseCharacters) {
+  console.log("going to check types", includeLowercaseCharacters);
+  if (includeLowercaseCharacters == 1) {
+    console.log("adding lowercase");
     characterTypes.push(generateLowercaseCharacter);
   }
   if (includeUppercaseCharacters) {
+    console.log("adding uppercase");
     characterTypes.push(generateUppercaseCharacter);
   }
   if (includeNumericCharacters) {
+    console.log("adding numeric");
     characterTypes.push(generateNumericCharacter);
   }
   if (includeSpecialCharacters) {
+    console.log("adding special");
     characterTypes.push(generateSpecialCharacter);
   }
+  console.log("characterTypes", characterTypes);
 
   for (let i = 0; i < passwordLength; i++) {
+    console.log("I am here");
     let randomCharacterTypeIndex = Math.floor(
       Math.random() * characterTypes.length
     );
@@ -95,10 +92,32 @@ const generatePassword = () => {
   return password.join("");
 };
 
+// display the password length form in modal
 const getPasswordLength = () => {
-  passwordLength = prompt(
-    "What password length (8-128 characters) do you require?"
-  );
+  overlay.style.display = "block";
+  formPasswordLength.style.display = "block";
+};
+
+const submitPasswordLength = (event) => {
+  // grab the value from the form
+  const data = new FormData(event);
+  passwordLength = data.get("passwordLength");
+
+  // check if the input is valid
+  let isValidPasswordLengthValid = validatePasswordLength();
+
+  // if valid: hide the password length form & show the type form
+  if (isValidPasswordLengthValid) {
+    formPasswordLength.style.display = "none";
+    formCharacterTypes.style.display = "block";
+  }
+  // else show password length error
+  else {
+    document.getElementById("passwordLengthError").style.display = "block";
+  }
+};
+
+const validatePasswordLength = () => {
   // check for validity: is a number, is a number between 8 & 128, no decimals
   if (
     isNaN(passwordLength) === true ||
@@ -106,12 +125,45 @@ const getPasswordLength = () => {
     parseInt(passwordLength) > 128 ||
     passwordLength % parseInt(passwordLength) > 0
   ) {
-    alert(
-      `'${passwordLength}' is not a valid character length between 8 and 128`
-    );
-    getPasswordLength();
+    return false;
   }
-  return passwordLength;
+  return true;
+};
+
+const submitCharacterTypes = (form) => {
+  const data = new FormData(form);
+  includeLowercaseCharacters = parseInt(data.get("lowercase"));
+  includeUppercaseCharacters = parseInt(data.get("uppercase"));
+  includeNumericCharacters = parseInt(data.get("numeric"));
+  includeSpecialCharacters = parseInt(data.get("special"));
+
+  const isValidCharacterTypes = validateCharacterTypes();
+
+  if (isValidCharacterTypes) {
+    modal.style.display = "none";
+    overlay.style.display = "none";
+  } else {
+    document.getElementById("typeError").style.display = "block";
+  }
+};
+
+const validateCharacterTypes = () => {
+  console.log(
+    includeLowercaseCharacters,
+    includeUppercaseCharacters,
+    includeNumericCharacters,
+    includeSpecialCharacters
+  );
+  if (
+    includeLowercaseCharacters == 0 &&
+    includeUppercaseCharacters == 0 &&
+    includeNumericCharacters == 0 &&
+    includeSpecialCharacters == 0
+  ) {
+    console.log("all types are false");
+    return false;
+  }
+  return true;
 };
 
 const setCharacterTypes = () => {
@@ -141,3 +193,11 @@ const confirmation = (number, type) => {
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
+
+const closeModal = () => {
+  modal.style.display = "none";
+  overlay.style.display = "none";
+};
+
+var modalCloseBtn = document.getElementById("modalCloseBtn");
+modalCloseBtn.addEventListener("click", closeModal);
