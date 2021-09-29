@@ -2,22 +2,17 @@
 var generateBtn = document.querySelector("#generate");
 let password = [];
 let passwordLength;
-let includeLowercaseCharacters,
-  includeUppercaseCharacters,
-  includeNumericCharacters,
-  includeSpecialCharacters;
-
-includeLowercaseCharacters =
-  includeUppercaseCharacters =
-  includeNumericCharacters =
-  includeSpecialCharacters =
-    false;
+// array to hold references to the chosen characterType function(s)
+let characterTypes = [];
+let includeLowercaseCharacters = false;
+let includeSpecialCharacters = false;
+let includeUppercaseCharacters = false;
+let includeNumericCharacters = false;
 
 // Write password to the #password input
 function writePassword() {
+  console.log("writePassword");
   var passwordText = document.getElementById("password");
-  //passwordText.value = Array(128).fill("-").join("");
-  //console.log(passwordText.value);
   password = [];
   passwordText.value = password;
   password = generatePassword();
@@ -25,71 +20,29 @@ function writePassword() {
   passwordText.value = password;
 }
 
-// GIVEN I need a new, secure password
-
-// WHEN I click the button to generate a password
-// THEN I am presented with a series of prompts for password criteria
-
-// WHEN prompted for password criteria
-// THEN I select which criteria to include in the password
-
-// WHEN prompted for the length of the password
-// THEN I choose a length of at least 8 characters and no more than 128 characters
-
-// WHEN asked for character types to include in the password
-// THEN I confirm whether or not to include lowercase, uppercase, numeric, and/or special characters
-
-// WHEN I answer each prompt
-// THEN my input should be validated and at least one character type should be selected
-
-// WHEN all prompts are answered
-// THEN a password is generated that matches the selected criteria
-
-// WHEN the password is generated
-// THEN the password is either displayed in an alert or written to the page
-
 const generatePassword = () => {
+  if (password.length > 0) {
+    return password;
+  }
+  console.log("generatePassword");
   passwordLength = getPasswordLength();
-
-  let isCharacterTypesValid = setCharacterTypes();
-
-  const generateLowercaseCharacter = () => {
-    return pickRandomCharacter("abcdefghijklmnopqrstuvwxyz");
-  };
-  const generateUppercaseCharacter = () => {
-    return pickRandomCharacter("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-  };
-  const generateNumericCharacter = () => {
-    return pickRandomCharacter("0123456789");
-  };
-  const generateSpecialCharacter = () => {
-    return pickRandomCharacter("!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~");
-  };
-
-  const pickRandomCharacter = (characterArray) => {
-    // pick a random character from the characterArray
-    return characterArray[Math.floor(Math.random() * characterArray.length)];
-  };
-
-  let characterTypes = [];
-  if (includeLowercaseCharacters) {
-    characterTypes.push(generateLowercaseCharacter);
+  console.log("checking passwordLength");
+  if (!passwordLength) {
+    alert("You must choose a password length.");
+    generatePassword();
   }
-  if (includeUppercaseCharacters) {
-    characterTypes.push(generateUppercaseCharacter);
-  }
-  if (includeNumericCharacters) {
-    characterTypes.push(generateNumericCharacter);
-  }
-  if (includeSpecialCharacters) {
-    characterTypes.push(generateSpecialCharacter);
-  }
-
-  for (let i = 0; i < passwordLength; i++) {
-    let randomCharacterTypeIndex = Math.floor(
-      Math.random() * characterTypes.length
-    );
-    password[i] = characterTypes[randomCharacterTypeIndex]();
+  console.log("about to call setCharacterTypes");
+  if (characterTypes.length === 0) {
+    setCharacterTypes();
+    console.log("after call setCharacterTypes");
+    for (let i = 0; i < passwordLength; i++) {
+      let randomCharacterTypeIndex = Math.floor(
+        Math.random() * characterTypes.length
+      );
+      // randomly choose a characterType function to run from the characterTypes function array
+      password[i] = characterTypes[randomCharacterTypeIndex]();
+    }
+    console.log("after for loop");
   }
 
   return password.join("");
@@ -120,6 +73,7 @@ const setCharacterTypes = () => {
   includeNumericCharacters = confirmation(3, "numeric");
   includeSpecialCharacters = confirmation(4, "special");
 
+  // verify that at least 1 character type is chosen
   if (
     !includeLowercaseCharacters &&
     !includeUppercaseCharacters &&
@@ -129,6 +83,38 @@ const setCharacterTypes = () => {
     alert("You must accept at least 1 character type.  Please try again.");
     setCharacterTypes();
   }
+
+  const generateLowercaseCharacter = () => {
+    return pickRandomCharacter("abcdefghijklmnopqrstuvwxyz");
+  };
+  const generateUppercaseCharacter = () => {
+    return pickRandomCharacter("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  };
+  const generateNumericCharacter = () => {
+    return pickRandomCharacter("0123456789");
+  };
+  const generateSpecialCharacter = () => {
+    return pickRandomCharacter("!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~");
+  };
+
+  const pickRandomCharacter = (characterArray) => {
+    // pick a random character from the characterArray
+    return characterArray[Math.floor(Math.random() * characterArray.length)];
+  };
+
+  if (includeLowercaseCharacters) {
+    characterTypes.push(generateLowercaseCharacter);
+  }
+  if (includeUppercaseCharacters) {
+    characterTypes.push(generateUppercaseCharacter);
+  }
+  if (includeNumericCharacters) {
+    characterTypes.push(generateNumericCharacter);
+  }
+  if (includeSpecialCharacters) {
+    characterTypes.push(generateSpecialCharacter);
+  }
+
   return true;
 };
 
