@@ -1,5 +1,5 @@
 // Assignment Code
-var generateBtn = document.querySelector("#generate");
+let generateBtn = document.querySelector("#generate");
 let password = [];
 let passwordLength;
 // array to hold references to the chosen characterType function(s)
@@ -9,32 +9,32 @@ let includeSpecialCharacters = false;
 let includeUppercaseCharacters = false;
 let includeNumericCharacters = false;
 
+function resetPassword(passwordText) {
+  password = [];
+  characterTypes = [];
+  passwordText.value = password;
+}
 // Write password to the #password input
 function writePassword() {
-  console.log("writePassword");
-  var passwordText = document.getElementById("password");
-  password = [];
-  passwordText.value = password;
+  let passwordText = document.getElementById("password");
+  resetPassword(passwordText);
   password = generatePassword();
-
   passwordText.value = password;
 }
 
-const generatePassword = () => {
+function generatePassword() {
   if (password.length > 0) {
-    return password;
+    return password.join("");
   }
-  console.log("generatePassword");
   passwordLength = getPasswordLength();
-  console.log("checking passwordLength");
   if (!passwordLength) {
     alert("You must choose a password length.");
-    generatePassword();
+    return generatePassword();
   }
-  console.log("about to call setCharacterTypes");
+
+  // characterTypes = setCharaterTypes();
   if (characterTypes.length === 0) {
     setCharacterTypes();
-    console.log("after call setCharacterTypes");
     for (let i = 0; i < passwordLength; i++) {
       let randomCharacterTypeIndex = Math.floor(
         Math.random() * characterTypes.length
@@ -42,13 +42,12 @@ const generatePassword = () => {
       // randomly choose a characterType function to run from the characterTypes function array
       password[i] = characterTypes[randomCharacterTypeIndex]();
     }
-    console.log("after for loop");
   }
 
   return password.join("");
-};
+}
 
-const getPasswordLength = () => {
+function getPasswordLength() {
   passwordLength = prompt(
     "What password length (8-128 characters) do you require?"
   );
@@ -65,9 +64,9 @@ const getPasswordLength = () => {
     getPasswordLength();
   }
   return passwordLength;
-};
+}
 
-const setCharacterTypes = () => {
+function setCharacterTypes() {
   includeLowercaseCharacters = confirmation(1, "lowercase");
   includeUppercaseCharacters = confirmation(2, "uppercase");
   includeNumericCharacters = confirmation(3, "numeric");
@@ -114,16 +113,14 @@ const setCharacterTypes = () => {
   if (includeSpecialCharacters) {
     characterTypes.push(generateSpecialCharacter);
   }
+}
 
-  return true;
-};
-
-const confirmation = (number, type) => {
-  var newLine = "\r\n";
+function confirmation(number, type) {
+  let newLine = "\r\n";
   return confirm(
     `Character type question ${number} of 4:${newLine}${newLine}Include ${type} characters?`
   );
-};
+}
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
