@@ -39,4 +39,4 @@ THEN the password is either displayed in an alert or written to the page
 
 ## Application Location
 
-[https://bravotango.github.io/password-generator/](https://bravotango.github.io/password-generator/)
+[https://bravotango.github.io/Password-Generator/](https://bravotango.github.io/Password-Generator/)
